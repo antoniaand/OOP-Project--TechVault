@@ -9,5 +9,6 @@ int main()
     std::cout << endl << "Testare";
     std::cout << endl << "Nia, tot nu merge.";
     std::cout << endl << "Nia lasa barfa ca nu ne merge.";
+    std::cout << endl << "Nia suntem cooked";
 }
 
