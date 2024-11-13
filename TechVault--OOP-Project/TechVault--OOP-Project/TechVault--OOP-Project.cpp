@@ -6,5 +6,7 @@
 int main()
 {
     std::cout << "Hello World!!!  incepem proiectu\n";
+    std::cout << endl << "Testare";
+
 }
 
