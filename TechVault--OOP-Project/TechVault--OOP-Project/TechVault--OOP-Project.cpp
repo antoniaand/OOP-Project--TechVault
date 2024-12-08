@@ -46,12 +46,94 @@ public:
 };
 
 class Table {
-    Column* column;
+private:
+    Column* columns=nullptr;
+     string name = ""; //of the table
+ int columnCount = 0;
+
+/* void copyConstructor(string* str, int count) {
+     if (str == nullptr || count == 0) {
+         columns = nullptr;
+         columnCount = 0;
+         return;
+     }
+   
+     if (columns) {
+         this->columns = new Column[columnCount];
+         columnCount = count;
+         for (int i = 0; i < count; i++) {
+             columns[i] = str[i];
+         }
+
+     } */
+ public:
+    Table() {};
+    Table(string name, int columnCount, Column* column) : name(name), columnCount(columnCount), columns(columns) {}
+    ~Table() {
+        delete[] columns;
+    }
+
+    void setName(string name) {
+        this->name = name;
+    }
+    string getName() {
+        return this->name;
+    }
+    void setColumnCount(int columnCount) {
+        this->columnCount = columnCount;
+    }
+    int getColumnCount() {
+        return this->columnCount;
+    }   
 
 
 };
 class Database {
-    void Create_Table() {}
+     Table** tables=nullptr;
+ int tableCount=0;
+ Database() {};
+ Database(Table** tables, int tableCount): tables(tables), tableCount(tableCount) {}
+ ~Database() {
+     for (int i = 0; i < tableCount; i++) {
+         delete tables[i];
+     }
+     delete[] tables;
+ }
+
+ int findTheTableIndex(string tableName) {
+     for (int i = 0; i < tableCount; i++) {
+         if (tables[i]->getName() == tableName) {
+             return i;
+         }
+     }
+     return -1;
+ }
+    void Create_Table(string command) {
+        int nameStart = command.find("CREATE TABLE") + 12; //table name starting point
+if (command.find("IF NOT EXISTS", nameStart) != NULL) {
+    nameStart = command.find("IF NOT EXISTS", nameStart) + 13;
+}
+int nameEnd = command.find("(", nameStart);
+if (nameEnd == NULL) {
+    throw "Error:Invalid command input format.\n";
+}
+
+string tableName = command.substr(nameStart, nameEnd - nameStart);
+
+//for the extra spaces:
+while (tableName.front() == ' ') {
+    tableName.erase(0, 1);
+}
+while (tableName.back() == ' ') {
+    tableName.pop_back();
+}
+if (findTheTableIndex(tableName) != -1) {
+    throw "A table with the same name already exists. \n";
+}
+else {
+
+}
+    }
     void Drop_Table() {}
     void Display_Table() {}
     void Create_Index() {}
@@ -67,7 +149,7 @@ enum CommandType { CREATE_TABLE, DROP_TABLE, DISPLAY_TABLE, CREATE_INDEX, DROP_I
 
 CommandType identify(string command) {
     for (int i = 0; i < command.size(); i++) {
-        if (command[i] > 'a' && command[i] < 'z') {
+        if (command[i] >= 'a' && command[i] <= 'z') {
             command[i] = command[i] - ('a' - 'A');
         }
     }
