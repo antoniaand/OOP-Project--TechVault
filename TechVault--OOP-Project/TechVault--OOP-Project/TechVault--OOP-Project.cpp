@@ -134,7 +134,19 @@ else {
 
 }
     }
-    void Drop_Table() {}
+    int Drop_Table(const string& name) {
+        for(int i=0;i<tableCount;i++){
+            if(tables[i]->getName()==name){
+                delete tables[i];
+                for(int j=i;j<tableCount-1;j++){
+                    tables[j]=tables[j+1];
+                }
+                tableCount--;
+                return 1;
+            }
+        }
+        return 0;
+    }
     void Display_Table() {}
     void Create_Index() {}
     void Drop_Index() {}
